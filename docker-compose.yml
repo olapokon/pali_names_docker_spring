@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    volumes:
+      - "./client:/usr/src/app_client"
+      - "/usr/src/app_client/node_modules"
+    depends_on:
+      - api
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5000:3001
+    depends_on:
+      - api
+      - client
